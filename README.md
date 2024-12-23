@@ -9,7 +9,8 @@
 
 
 # Basic mechanism
-![image](https://github.com/user-attachments/assets/45fb4cfb-431e-433c-be81-3cf4fa840b69)
+![image](https://github.com/user-attachments/assets/34350043-16b5-41d7-9528-9f99b00aebe5)
+
 
 # Implementation
 
