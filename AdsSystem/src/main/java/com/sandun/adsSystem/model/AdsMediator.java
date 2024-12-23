@@ -19,8 +19,8 @@ public class AdsMediator {
     public AdsInitializer initializer;
     public AppCompatActivity activity;
     private PreLoader preLoader;
-    private AdMethodType adMethodType;
     private boolean isIgnoreAds;
+    private AdMethodType adMethodType;
     private AdsMediator() {
         preLoader = new PreLoader(this);
     }
