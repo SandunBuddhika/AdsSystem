@@ -19,7 +19,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "AdsSystem"
 include ':app'
 include ':AdsSystem'
