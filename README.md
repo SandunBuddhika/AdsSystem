@@ -7,6 +7,12 @@
 * handling error and success states of a ads
 * if a ad failed to load the first time try to load another before going to failed state (admob ad failed this try to load a meta ad before going to failed state).
 
+# Ads types
+* Interstitial
+* App open
+* Reward
+* Native
+* Banner
 
 # Basic mechanism
 ![image](https://github.com/user-attachments/assets/34350043-16b5-41d7-9528-9f99b00aebe5)
