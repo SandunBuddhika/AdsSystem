@@ -1,6 +1,6 @@
 
 # Introduction
-* This is library to implement google admob and meta ads totherger into a one android appllication, and new and easy way to implement into a android application.
+* This is library to easily implement google admob and meta ads totherger into a one android appllication with few code lines.
 
 # Key Features
 * Pre loading ads
