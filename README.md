@@ -18,7 +18,8 @@
   You need to put this in to your setting.gradle file
 ```java
 maven { url = uri("https://www.jitpack.io") }
-
+```
+```java
 //example
 
 dependencyResolutionManagement {
