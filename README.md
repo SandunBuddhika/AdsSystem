@@ -52,4 +52,9 @@ mediator.showInterstitialAd(new AdRequestHandler() {
 mediator.preLoadAds(AdType.INTERSTITIAL);
 ```
 
+* Step 5
+```java
+mediator.clearPreLoadedAd(AdType.INTERSTITIAL);
+```
+
 There is few more functions, i'm sure you will figure it out :)
