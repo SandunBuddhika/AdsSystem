@@ -15,12 +15,12 @@ import com.sandun.adsSystem.model.adsModel.RewardAd;
 import com.sandun.adsSystem.model.handler.ViewAdRequestHandler;
 
 public class AdsMediator {
+    private boolean isIgnoreAds;
     private static AdsMediator adsMediator;
     public AdsInitializer initializer;
     public AppCompatActivity activity;
     private PreLoader preLoader;
     private AdMethodType adMethodType;
-    private boolean isIgnoreAds;
 
     private AdsMediator() {
         preLoader = new PreLoader(this);
