@@ -14,6 +14,10 @@
 
 # Implementation
 
+```css
+implementation 'com.github.SandunBuddhika:AdsSystem:1.0.3'
+```
+
 * Step 1
 
 ```java  
