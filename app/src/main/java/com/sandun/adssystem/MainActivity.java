@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         AdsInitializer initializer = AdsInitializer.getInstance(
-                new AdsInitializer.FacebookIds("561288649843138", "561288649843138_561290069842996", "561288649843138_561289826509687", "561288649843138_561290649842938"),
-                new AdsInitializer.GoogleIds("ca-app-pub-3940256099942544~3347511713", "ca-app-pub-3940256099942544/1033173712", "ca-app-pub-3940256099942544/9214589741", "ca-app-pub-3940256099942544/9257395921", "ca-app-pub-3940256099942544/5224354917", "ca-app-pub-3940256099942544/2247696110"));
+                new AdsInitializer.FacebookIds("123", "123", "123", "123"),
+                new AdsInitializer.GoogleIds("123", "123", "123", "123", "123", "123"));
 
         AdsMediator mediator = AdsMediator.getInstance(this, initializer);
         mediator.setAdMethodType(AdMethodType.ADMOB);
