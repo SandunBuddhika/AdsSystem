@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         AdsMediator mediator = AdsMediator.getInstance(this, initializer);
         mediator.setAdMethodType(AdMethodType.ADMOB);
-        //        mediator.preLoadAds(AdType.INTERSTITIAL);
-        //        mediator.preLoadAds(AdType.REWARD);
-        //        mediator.preLoadAds(AdType.OPEN);
-
+        mediator.preLoadAds(AdType.INTERSTITIAL);
+        mediator.preLoadAds(AdType.REWARD);
+        mediator.preLoadAds(AdType.OPEN);
+        mediator.setIgnoreAds(true);
         findViewById(R.id.interstitial_ad_btn).setOnClickListener(v -> {
             mediator.showInterstitialAd(new AdRequestHandler() {
                 @Override

@@ -21,13 +21,13 @@ public class AdsMediator {
     private PreLoader preLoader;
     private boolean isIgnoreAds;
     private AdMethodType adMethodType;
+
     private AdsMediator() {
         preLoader = new PreLoader(this);
     }
 
     public static AdsMediator getInstance(AppCompatActivity activity, AdsInitializer initializer) {
         init(activity, initializer);
-        AdSettings.setTestMode(true);
         return adsMediator;
     }
 

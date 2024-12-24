@@ -21,7 +21,6 @@ public class PreLoader {
     private final Map<AdMethodType, Object> interstitialAds;
     private final Map<AdMethodType, Object> rewardAds;
     private final Map<AdMethodType, Object> openAds;
-
     public PreLoader(AdsMediator adsMediator) {
         this.adsMediator = adsMediator;
         adRequest = new AdRequest.Builder().build();
@@ -29,7 +28,6 @@ public class PreLoader {
         rewardAds = new HashMap<>();
         openAds = new HashMap<>();
     }
-
     public void preLoadInterstitialAds() {
         com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
