@@ -117,7 +117,7 @@ new ViewAdRequestHandler() {
 //      this method for manually handle ad view if needed
     }
 },
-// need parse a Empty Layout container to add the native or banner ad
+// need to parse a empty layout container to place the native and banner ad
 findViewById(R.id.banner_ad_container));
 ```
 
