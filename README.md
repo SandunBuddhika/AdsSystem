@@ -59,7 +59,7 @@ implementation("com.facebook.android:audience-network-sdk:6.18.0")
         new AdsInitializer.GoogleIds("123", "123", "123", "123", "123", "123"));  
 ```
 
-Don't forget to set app id in the AndroidManifest.xml
+Don't forget to set app ids in the AndroidManifest.xml
 
 * Step 4
 
