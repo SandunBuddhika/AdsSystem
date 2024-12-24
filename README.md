@@ -91,24 +91,23 @@ mediator.clearPreLoadedAd(AdType.INTERSTITIAL);
 
 When you use native ads or banner ads state handling process is bit different
 ```java
+
 mediator.showBannerAd(
 // need ViewAdRequestHandler to handler state of ad
 new ViewAdRequestHandler() {
-                @Override
-                public void onSuccess() {
-                    System.out.println("onSuccess");
-                }
-
-                @Override
-                public void onError() {
-                    System.out.println("onError");
-                }
-
-                @Override
-                public void viewHandler(View adView) {
-//                this method for manually handle ad view if needed
-                }
-            },
+    @Override
+    public void onSuccess() {
+        System.out.println("onSuccess");
+    }
+    @Override
+    public void onError() {
+        System.out.println("onError");
+    }
+    @Override
+    public void viewHandler(View adView) {
+//      this method for manually handle ad view if needed
+    }
+},
 // need parse a Empty Layout container to add the native or banner ad
 findViewById(R.id.banner_ad_container));
 ```
