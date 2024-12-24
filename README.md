@@ -41,6 +41,14 @@ dependencyResolutionManagement {
 * Step 2
 ```css
 implementation 'com.github.SandunBuddhika:AdsSystem:1.0.4'
+
+//other
+
+implementation("com.google.errorprone:error_prone_annotations:2.36.0")
+
+implementation("com.google.android.gms:play-services-ads:23.5.0")
+implementation("androidx.annotation:annotation:1.0.0")
+implementation("com.facebook.android:audience-network-sdk:6.18.0")
 ```
 
 * Step 3
