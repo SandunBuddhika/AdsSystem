@@ -40,7 +40,7 @@ dependencyResolutionManagement {
 
 * Step 2
 ```css
-implementation 'com.github.SandunBuddhika:AdsSystem:1.0.3'
+implementation 'com.github.SandunBuddhika:AdsSystem:1.0.4'
 ```
 
 * Step 3
