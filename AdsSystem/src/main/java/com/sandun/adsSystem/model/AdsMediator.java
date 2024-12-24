@@ -5,6 +5,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.ads.AdSettings;
+import com.facebook.ads.AudienceNetworkAds;
 import com.sandun.adsSystem.model.adsModel.InterstitialAd;
 import com.sandun.adsSystem.model.handler.AdRequestHandler;
 import com.sandun.adsSystem.AdsInitializer;
@@ -34,10 +35,10 @@ public class AdsMediator {
     private static void init(AppCompatActivity activity, AdsInitializer initializer) {
         if (adsMediator == null) {
             adsMediator = new AdsMediator();
-//            AudienceNetworkAds.initialize(activity);
+            AudienceNetworkAds.initialize(activity);
         }
-        adsMediator.activity = activity;
         adsMediator.initializer = initializer;
+        adsMediator.activity = activity;
     }
 
     public void setIgnoreAds(boolean ignoreAds) {
