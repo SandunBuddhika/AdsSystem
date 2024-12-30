@@ -1,4 +1,6 @@
 
+[![](https://jitpack.io/v/SandunBuddhika/AdsSystem.svg)](https://jitpack.io/#SandunBuddhika/AdsSystem)
+
 # Introduction
 * This is library to easily implement google admob and meta ads together into a one android appllication with few lines code.
 
@@ -39,8 +41,15 @@ dependencyResolutionManagement {
 ```
 
 * Step 2
-```css
-implementation 'com.github.SandunBuddhika:AdsSystem:1.0.4'
+```kotlin
+implementation("com.github.SandunBuddhika:AdsSystem:1.0.4")
+
+//other
+
+implementation("com.google.errorprone:error_prone_annotations:2.36.0")
+
+implementation("com.google.android.gms:play-services-ads:23.5.0")
+implementation("com.facebook.android:audience-network-sdk:6.18.0")
 ```
 
 * Step 3
@@ -50,7 +59,9 @@ implementation 'com.github.SandunBuddhika:AdsSystem:1.0.4'
  AdsInitializer initializer = AdsInitializer.getInstance(  
         new AdsInitializer.FacebookIds("123", "123", "123", "123"),  
         new AdsInitializer.GoogleIds("123", "123", "123", "123", "123", "123"));  
-```  
+```
+
+Don't forget to set app ids in the AndroidManifest.xml
 
 * Step 4
 
@@ -85,6 +96,31 @@ mediator.preLoadAds(AdType.INTERSTITIAL);
 * Step 7
 ```java
 mediator.clearPreLoadedAd(AdType.INTERSTITIAL);
+```
+
+* Additionally
+
+When you use native ads or banner ads state handling process is bit different
+```java
+
+mediator.showBannerAd(
+// need ViewAdRequestHandler to handler state of ad
+new ViewAdRequestHandler() {
+    @Override
+    public void onSuccess() {
+        System.out.println("onSuccess");
+    }
+    @Override
+    public void onError() {
+        System.out.println("onError");
+    }
+    @Override
+    public void viewHandler(View adView) {
+//      this method for manually handle ad view if needed
+    }
+},
+// need to parse a empty layout container to place the native and banner ad
+findViewById(R.id.banner_ad_container));
 ```
 
 There is few more functions, i'm sure you will figure it out :)
