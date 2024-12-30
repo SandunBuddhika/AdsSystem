@@ -48,7 +48,7 @@ project.afterEvaluate {
             libraryProject(MavenPublication) {
                 setGroupId 'com.sandun'
                 setArtifactId 'adsSystem'
-                version '1.0.1'
+                version '1.0.5'
                 artifact bundleReleaseAar
             }
         }

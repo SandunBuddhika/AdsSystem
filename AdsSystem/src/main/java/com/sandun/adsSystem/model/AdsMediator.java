@@ -32,12 +32,19 @@ public class AdsMediator {
         return adsMediator;
     }
 
+    public static AdsMediator getInstance(AppCompatActivity activity) {
+        init(activity, null);
+        return adsMediator;
+    }
+
     private static void init(AppCompatActivity activity, AdsInitializer initializer) {
         if (adsMediator == null) {
             adsMediator = new AdsMediator();
             AudienceNetworkAds.initialize(activity);
         }
-        adsMediator.initializer = initializer;
+        if (initializer != null) {
+            adsMediator.initializer = initializer;
+        }
         adsMediator.activity = activity;
     }
 
