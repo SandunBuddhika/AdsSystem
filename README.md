@@ -42,7 +42,7 @@ dependencyResolutionManagement {
 
 * Step 2
 ```kotlin
-implementation 'com.github.SandunBuddhika:AdsSystem:1.0.5'
+implementation 'com.github.SandunBuddhika:AdsSystem:1.0.7'
 
 //other
 
