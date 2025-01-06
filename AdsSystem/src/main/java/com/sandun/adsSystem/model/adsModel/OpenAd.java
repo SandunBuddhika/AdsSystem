@@ -25,6 +25,7 @@ public class OpenAd extends AdsCompact {
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        this.errorHandler = errorHandler;
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
         } else {

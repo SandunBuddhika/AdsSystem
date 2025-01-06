@@ -41,6 +41,7 @@ public class NativeAd extends ViewAdsCompact {
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        this.errorHandler = errorHandler;
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
         } else {
