@@ -1,4 +1,5 @@
 
+
 [![](https://jitpack.io/v/SandunBuddhika/AdsSystem.svg)](https://jitpack.io/#SandunBuddhika/AdsSystem)
 
 # Introduction
@@ -121,6 +122,14 @@ new ViewAdRequestHandler() {
 },
 // need to parse a empty layout container to place the native and banner ad
 findViewById(R.id.banner_ad_container));
+```
+
+Loading screen
+```java
+
+	// set your own loading layout
+	mediator.setLoadingLayoutId(R.layout.dialog_loading_ads_layout);
+
 ```
 
 There is few more functions, i'm sure you will figure it out :)
