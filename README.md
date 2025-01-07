@@ -127,8 +127,8 @@ findViewById(R.id.banner_ad_container));
 Loading screen
 ```java
 
-	// set your own loading layout
-	mediator.setLoadingLayoutId(R.layout.dialog_loading_ads_layout);
+// set your own loading layout
+mediator.setLoadingLayoutId(R.layout.dialog_loading_ads_layout);
 
 ```
 
