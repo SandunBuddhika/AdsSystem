@@ -31,16 +31,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
         AdsInitializer initializer = AdsInitializer.getInstance(
                 new AdsInitializer.FacebookIds("123", "123", "123", "123"),
-                new AdsInitializer.GoogleIds("123", "123", "123", "123", "123", "123"));
+                new AdsInitializer.GoogleIds("ca-app-pub-3940256099942544~3347511713",
+                        "ca-app-pub-3940256099942544/1033173712",
+                        "ca-app-pub-3940256099942544/9214589741",
+                        "ca-app-pub-3940256099942544/9257395921",
+                        "ca-app-pub-3940256099942544/5224354917",
+                        "ca-app-pub-3940256099942544/2247696110"));
 
         AdsMediator mediator = AdsMediator.getInstance(this, initializer);
         mediator.setAdMethodType(AdMethodType.ADMOB);
         mediator.preLoadAds(AdType.INTERSTITIAL);
         mediator.preLoadAds(AdType.REWARD);
         mediator.preLoadAds(AdType.OPEN);
-        mediator.setIgnoreAds(true);
+//        mediator.setIgnoreAds(true);
         findViewById(R.id.interstitial_ad_btn).setOnClickListener(v -> {
             mediator.showInterstitialAd(new AdRequestHandler() {
                 @Override

@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.ads.AdSettings;
 import com.facebook.ads.AudienceNetworkAds;
+import com.sandun.adsSystem.R;
+import com.sandun.adsSystem.dialog.LoadingDialog;
 import com.sandun.adsSystem.model.adsModel.InterstitialAd;
 import com.sandun.adsSystem.model.handler.AdRequestHandler;
 import com.sandun.adsSystem.AdsInitializer;
@@ -22,6 +24,7 @@ public class AdsMediator {
     private PreLoader preLoader;
     private boolean isIgnoreAds;
     private AdMethodType adMethodType;
+    private int loadingLayoutId= R.layout.dialog_loading_ads_layout;
 
     private AdsMediator() {
         preLoader = new PreLoader(this);
@@ -58,6 +61,14 @@ public class AdsMediator {
 
     public Object getNewPreLoadedAd(AdMethodType methodType, AdType adType) {
         return null;
+    }
+
+    public int getLoadingLayoutId() {
+        return loadingLayoutId;
+    }
+
+    public void setLoadingLayoutId(int loadingLayoutId) {
+        this.loadingLayoutId = loadingLayoutId;
     }
 
     public void preLoadAds(AdType adType) {

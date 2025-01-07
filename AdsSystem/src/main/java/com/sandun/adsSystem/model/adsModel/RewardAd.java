@@ -29,6 +29,7 @@ public class RewardAd extends AdsCompact {
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
         this.errorHandler = errorHandler;
+        loadingDialog.show();
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
         } else {
@@ -40,6 +41,8 @@ public class RewardAd extends AdsCompact {
     public void showAdMob(AdRequestHandler handler) throws FailedToLoadAdException {
         Object ad = preLoadedAds.get(adMethodType);
         if (ad instanceof RewardedAd) {
+
+            loadingDialog.show();
             RewardedAd rewardedAd = (RewardedAd) ad;
             rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
@@ -69,6 +72,8 @@ public class RewardAd extends AdsCompact {
                     Log.d(TAG, "Ad showed fullscreen content.");
                 }
             });
+
+            loadingDialog.dismiss();
             rewardedAd.show(adsMediator.activity, rewardItem -> {
                 handler.onSuccess();
                 adsMediator.clearPreLoadedAd(adType);
@@ -106,6 +111,7 @@ public class RewardAd extends AdsCompact {
                                     Log.d(TAG, "Ad showed fullscreen content.");
                                 }
                             });
+                            loadingDialog.dismiss();
                             ad.show(adsMediator.activity, rewardItem -> {
                                 handler.onSuccess();
                                 adsMediator.clearPreLoadedAd(AdType.INTERSTITIAL);
@@ -161,6 +167,7 @@ public class RewardAd extends AdsCompact {
                         }
                     })
                     .build());
+            loadingDialog.dismiss();
             interstitialAd.show();
         } else {
             com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getInitId());
@@ -186,6 +193,7 @@ public class RewardAd extends AdsCompact {
                 @Override
                 public void onAdLoaded(Ad ad) {
                     System.out.println("onAdLoaded");
+                    loadingDialog.dismiss();
                     mInterstitialAd.show();
                 }
 

@@ -27,6 +27,7 @@ public class InterstitialAd extends AdsCompact {
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        loadingDialog.show();
         this.errorHandler = errorHandler;
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
@@ -54,6 +55,7 @@ public class InterstitialAd extends AdsCompact {
                     errorHandler.onFailed();
                 }
             });
+            loadingDialog.dismiss();
             interstitialAd.show(adsMediator.activity);
         } else {
             com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.activity, adsMediator.initializer.getGoogleIds().getInitId(), adRequest,
@@ -74,6 +76,7 @@ public class InterstitialAd extends AdsCompact {
                                     errorHandler.onFailed();
                                 }
                             });
+                            loadingDialog.dismiss();
                             interstitialAd.show(adsMediator.activity);
                         }
 
@@ -125,6 +128,7 @@ public class InterstitialAd extends AdsCompact {
                         }
                     })
                     .build());
+            loadingDialog.dismiss();
             interstitialAd.show();
         } else {
             com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getInitId());
@@ -150,6 +154,7 @@ public class InterstitialAd extends AdsCompact {
                 @Override
                 public void onAdLoaded(Ad ad) {
                     System.out.println("onAdLoaded");
+                    loadingDialog.dismiss();
                     mInterstitialAd.show();
                 }
 
