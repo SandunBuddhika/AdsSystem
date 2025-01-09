@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                         "ca-app-pub-3940256099942544/2247696110"));
 
         AdsMediator mediator = AdsMediator.getInstance(this, initializer);
-        mediator.setAdMethodType(AdMethodType.ADMOB);
+//        mediator.setAdMethodType(AdMethodType.ADMOB);
         mediator.preLoadAds(AdType.INTERSTITIAL);
         mediator.preLoadAds(AdType.REWARD);
         mediator.preLoadAds(AdType.OPEN);
