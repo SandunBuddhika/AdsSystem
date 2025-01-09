@@ -41,8 +41,6 @@ public class RewardAd extends AdsCompact {
     public void showAdMob(AdRequestHandler handler) throws FailedToLoadAdException {
         Object ad = preLoadedAds.get(adMethodType);
         if (ad instanceof RewardedAd) {
-
-            loadingDialog.show();
             RewardedAd rewardedAd = (RewardedAd) ad;
             rewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
