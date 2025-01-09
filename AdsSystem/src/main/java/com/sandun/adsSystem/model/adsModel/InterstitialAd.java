@@ -82,6 +82,7 @@ public class InterstitialAd extends AdsCompact {
 
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            loadingDialog.dismiss();
                             System.out.println(loadAdError.getMessage());
                             errorHandler.onFailed();
                         }
@@ -148,6 +149,7 @@ public class InterstitialAd extends AdsCompact {
                 @Override
                 public void onError(Ad ad, com.facebook.ads.AdError adError) {
                     System.out.println(adError.getErrorMessage());
+                    loadingDialog.dismiss();
                     errorHandler.onFailed();
                 }
 

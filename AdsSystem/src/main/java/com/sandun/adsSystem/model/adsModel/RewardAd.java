@@ -96,6 +96,7 @@ public class RewardAd extends AdsCompact {
 
                                 @Override
                                 public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                    loadingDialog.dismiss();
                                     errorHandler.onFailed();
                                     System.out.println(adError.getMessage());
                                     System.out.println("Reward ad failed to show");
@@ -120,6 +121,7 @@ public class RewardAd extends AdsCompact {
 
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                            loadingDialog.dismiss();
                             errorHandler.onFailed();
                             System.out.println(loadAdError.getMessage());
                             System.out.println("Reward ad failed to load");
@@ -187,6 +189,7 @@ public class RewardAd extends AdsCompact {
                 @Override
                 public void onError(Ad ad, com.facebook.ads.AdError adError) {
                     System.out.println(adError.getErrorMessage());
+                    loadingDialog.dismiss();
                     errorHandler.onFailed();
                 }
 
