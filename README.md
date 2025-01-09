@@ -43,12 +43,10 @@ dependencyResolutionManagement {
 
 * Step 2
 ```kotlin
-implementation 'com.github.SandunBuddhika:AdsSystem:1.0.8'
+implementation 'com.github.SandunBuddhika:AdsSystem:1.1.1'
 
 //other
-
-implementation("com.google.errorprone:error_prone_annotations:2.36.0")
-
+implementation ("com.airbnb.android:lottie:6.6.2")
 implementation("com.google.android.gms:play-services-ads:23.5.0")
 implementation("com.facebook.android:audience-network-sdk:6.18.0")
 ```
