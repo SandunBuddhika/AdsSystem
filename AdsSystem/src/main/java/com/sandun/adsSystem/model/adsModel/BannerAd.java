@@ -69,7 +69,6 @@ public class BannerAd extends ViewAdsCompact {
                 public void onError(Ad ad, AdError adError) {
                     errorHandler.onFailed();
                 }
-
                 @Override
                 public void onAdLoaded(Ad ad) {
 
