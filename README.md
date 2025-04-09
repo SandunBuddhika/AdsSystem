@@ -43,7 +43,7 @@ dependencyResolutionManagement {
 
 * Step 2
 ```kotlin
-implementation 'com.github.SandunBuddhika:AdsSystem:1.1.2'
+implementation("com.github.SandunBuddhika:AdsSystem:1.1.2")
 
 //other
 implementation ("com.airbnb.android:lottie:6.6.2")
