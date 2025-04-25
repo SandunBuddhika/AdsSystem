@@ -53,6 +53,28 @@ public class AdsInitializer {
             this.appOpenId = appOpenId;
             this.rewardId = rewardId;
             this.nativeId = nativeId;
+            checkNull();
+        }
+
+        public void checkNull() {
+            if (this.appId == null) {
+                this.appId = "";
+            }
+            if (this.initId == null) {
+                this.initId = "";
+            }
+            if (this.bannerId == null) {
+                this.bannerId = "";
+            }
+            if (this.appOpenId == null) {
+                this.appOpenId = "";
+            }
+            if (this.rewardId == null) {
+                this.rewardId = "";
+            }
+            if (this.nativeId == null) {
+                this.nativeId = "";
+            }
         }
 
         public void setAppId(String id) {
@@ -115,6 +137,23 @@ public class AdsInitializer {
             this.initId = initId;
             this.bannerId = bannerId;
             this.nativeId = nativeId;
+
+            checkNull();
+        }
+
+        public void checkNull() {
+            if (this.appId == null) {
+                this.appId = "";
+            }
+            if (this.initId == null) {
+                this.initId = "";
+            }
+            if (this.bannerId == null) {
+                this.bannerId = "";
+            }
+            if (this.nativeId == null) {
+                this.nativeId = "";
+            }
         }
 
         public void setAppId(String id) {
