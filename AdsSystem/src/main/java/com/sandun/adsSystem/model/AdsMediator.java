@@ -129,6 +129,10 @@ public class AdsMediator {
         }
     }
 
+    public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container) {
+        showNativeAd(handler, container, false);
+    }
+
     public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container, boolean isMedium) {
         if (!isIgnoreAds) {
             NativeAd ad = new NativeAd(this, adMethodType, preLoader.getOpenAds(), container, isMedium);
