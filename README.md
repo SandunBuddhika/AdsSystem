@@ -43,7 +43,7 @@ dependencyResolutionManagement {
 
 * Step 2
 ```kotlin
-implementation("com.github.SandunBuddhika:AdsSystem:1.1.2")
+implementation("com.github.SandunBuddhika:AdsSystem:1.2.3")
 
 //other
 implementation ("com.airbnb.android:lottie:6.6.2")
@@ -55,6 +55,7 @@ implementation("com.facebook.android:audience-network-sdk:6.18.0")
 
 ```java  
  //STEP 1: Initialize your abmod and meta ads code
+ //
  AdsInitializer initializer = AdsInitializer.getInstance(  
         new AdsInitializer.FacebookIds("123", "123", "123", "123"),  
         new AdsInitializer.GoogleIds("123", "123", "123", "123", "123", "123"));  
