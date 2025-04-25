@@ -24,7 +24,7 @@ public class AdsMediator {
     private PreLoader preLoader;
     private boolean isIgnoreAds;
     private AdMethodType adMethodType;
-    private int loadingLayoutId= R.layout.dialog_loading_ads_layout;
+    private int loadingLayoutId = R.layout.dialog_loading_ads_layout;
 
     private AdsMediator() {
         preLoader = new PreLoader(this);
@@ -129,9 +129,9 @@ public class AdsMediator {
         }
     }
 
-    public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container) {
+    public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container, boolean isMedium) {
         if (!isIgnoreAds) {
-            NativeAd ad = new NativeAd(this, adMethodType, preLoader.getOpenAds(), container);
+            NativeAd ad = new NativeAd(this, adMethodType, preLoader.getOpenAds(), container, isMedium);
             new ErrorHandler(ad, handler, this);
         } else {
             handler.onSuccess();

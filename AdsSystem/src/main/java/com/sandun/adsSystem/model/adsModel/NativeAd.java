@@ -33,10 +33,12 @@ import java.util.List;
 import java.util.Map;
 
 public class NativeAd extends ViewAdsCompact {
+    private boolean isMedium;
 
-    public NativeAd(AdsMediator adsMediator, AdMethodType adMethodType, Map<AdMethodType, Object> preLoadedAds, LinearLayout container) {
+    public NativeAd(AdsMediator adsMediator, AdMethodType adMethodType, Map<AdMethodType, Object> preLoadedAds, LinearLayout container, boolean isMedium) {
         super(adsMediator, adMethodType, preLoadedAds, container);
-        adType = AdType.NATIVE;
+        this.adType = AdType.NATIVE;
+        this.isMedium = isMedium;
     }
 
     @Override
@@ -53,8 +55,10 @@ public class NativeAd extends ViewAdsCompact {
     public void showAdMob(AdRequestHandler handler) throws FailedToLoadAdException {
         try {
             ViewAdRequestHandler viewHandler = (ViewAdRequestHandler) handler;
+
             LinearLayout nativeAdContainer = (LinearLayout) container;
-            LinearLayout layout = (LinearLayout) LayoutInflater.from(adsMediator.activity).inflate(R.layout.small_native_ad_layout, null, false);
+
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(adsMediator.activity).inflate(isMedium ? R.layout.medium_native_ad_layout : R.layout.small_native_ad_layout, null, false);
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(layout);
             TemplateView nativeAdView = layout.findViewById(R.id.my_template);

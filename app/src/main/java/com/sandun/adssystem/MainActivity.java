@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
         AdsInitializer initializer = AdsInitializer.getInstance(
                 new AdsInitializer.FacebookIds("123", "123", "123", "123"),
                 new AdsInitializer.GoogleIds("ca-app-pub-3940256099942544~3347511713",
@@ -107,7 +106,24 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void viewHandler(View adView) {
                 }
-            }, findViewById(R.id.native_ad_container));
+            }, findViewById(R.id.native_ad_container), false);
+        });
+        findViewById(R.id.native_medium_ad_btn).setOnClickListener(v -> {
+            mediator.showNativeAd(new ViewAdRequestHandler() {
+                @Override
+                public void onSuccess() {
+                    System.out.println("onSuccess");
+                }
+
+                @Override
+                public void onError() {
+                    System.out.println("onError");
+                }
+
+                @Override
+                public void viewHandler(View adView) {
+                }
+            }, findViewById(R.id.native_ad_container), true);
         });
         findViewById(R.id.banner_ad_btn).setOnClickListener(v -> {
             mediator.showBannerAd(new ViewAdRequestHandler() {
