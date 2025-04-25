@@ -9,6 +9,16 @@ public class AdsInitializer {
     private AdsInitializer(FacebookIds facebookIds, GoogleIds googleIds) {
         this.facebookIds = facebookIds;
         this.googleIds = googleIds;
+        checkNull();
+    }
+
+    public void checkNull() {
+        if (this.googleIds == null) {
+            this.googleIds =new GoogleIds();
+        }
+        if (this.facebookIds == null) {
+            this.facebookIds =new FacebookIds();
+        }
     }
 
     public static AdsInitializer getInstance(FacebookIds facebookIds, GoogleIds googleIds) {
@@ -45,6 +55,10 @@ public class AdsInitializer {
         private String appOpenId;
         private String rewardId;
         private String nativeId;
+
+        private GoogleIds() {
+            checkNull();
+        }
 
         public GoogleIds(String appId, String initId, String bannerId, String appOpenId, String rewardId, String nativeId) {
             this.appId = appId;
@@ -131,6 +145,10 @@ public class AdsInitializer {
         private String initId;
         private String bannerId;
         private String nativeId;
+
+        private FacebookIds() {
+            checkNull();
+        }
 
         public FacebookIds(String appId, String initId, String bannerId, String nativeId) {
             this.appId = appId;
