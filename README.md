@@ -49,6 +49,7 @@ implementation("com.github.SandunBuddhika:AdsSystem:1.2.3")
 implementation ("com.airbnb.android:lottie:6.6.2")
 implementation("com.google.android.gms:play-services-ads:23.5.0")
 implementation("com.facebook.android:audience-network-sdk:6.18.0")
+implementation("com.google.ads.mediation:facebook:6.21.0.3")
 ```
 
 * Step 3
