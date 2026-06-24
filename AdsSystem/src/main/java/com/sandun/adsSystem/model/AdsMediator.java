@@ -4,10 +4,8 @@ import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.facebook.ads.AdSettings;
 import com.facebook.ads.AudienceNetworkAds;
 import com.sandun.adsSystem.R;
-import com.sandun.adsSystem.dialog.LoadingDialog;
 import com.sandun.adsSystem.model.adsModel.InterstitialAd;
 import com.sandun.adsSystem.model.handler.AdRequestHandler;
 import com.sandun.adsSystem.AdsInitializer;
@@ -20,7 +18,11 @@ import com.sandun.adsSystem.model.handler.ViewAdRequestHandler;
 public class AdsMediator {
     private static AdsMediator adsMediator;
     public AdsInitializer initializer;
-    public AppCompatActivity activity;
+    private java.lang.ref.WeakReference<AppCompatActivity> activityRef;
+
+    public AppCompatActivity getActivity() {
+        return activityRef != null ? activityRef.get() : null;
+    }
     private PreLoader preLoader;
     private boolean isIgnoreAds;
     private AdMethodType adMethodType;
@@ -47,9 +49,55 @@ public class AdsMediator {
         }
         if (initializer != null) {
             adsMediator.initializer = initializer;
+            adsMediator.fetchVariablesFromBackend(activity, initializer);
         }
-        adsMediator.activity = activity;
+        adsMediator.activityRef = new java.lang.ref.WeakReference<>(activity);
     }
+
+    private void fetchVariablesFromBackend(android.content.Context context, AdsInitializer initializer) {
+        if (initializer.getBackendUrl() == null || initializer.getBackendUrl().isEmpty()) {
+            return;
+        }
+
+        String url = initializer.getBackendUrl() + "/api/initialize/" + initializer.getAppId();
+        com.android.volley.RequestQueue queue = VolleySingleton.getInstance(context).getRequestQueue();
+        
+        com.android.volley.toolbox.JsonObjectRequest request = new com.android.volley.toolbox.JsonObjectRequest(
+            com.android.volley.Request.Method.GET,
+            url,
+            null,
+            new com.android.volley.Response.Listener<org.json.JSONObject>() {
+                @Override
+                public void onResponse(org.json.JSONObject response) {
+                    try {
+                        if (response.has("variables")) {
+                            org.json.JSONObject vars = response.getJSONObject("variables");
+                            if (vars.has("ad_frequency")) {
+                                int freq = vars.getInt("ad_frequency");
+                                initializer.setAdFrequency(freq);
+                                System.out.println("Initialized adFrequency to " + freq);
+                            }
+                            if (vars.has("personal_ads_active")) {
+                                boolean active = vars.getBoolean("personal_ads_active");
+                                initializer.setPersonalAdsActive(active);
+                                System.out.println("Initialized personalAdsActive to " + active);
+                            }
+                        }
+                    } catch (org.json.JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },
+            new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(com.android.volley.VolleyError error) {
+                    System.out.println("Failed to fetch ad config from backend: " + error.getMessage());
+                }
+            }
+        );
+        queue.add(request);
+    }
+
 
     public void setIgnoreAds(boolean ignoreAds) {
         isIgnoreAds = ignoreAds;

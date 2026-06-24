@@ -38,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
                         "ca-app-pub-3940256099942544/9214589741",
                         "ca-app-pub-3940256099942544/9257395921",
                         "ca-app-pub-3940256099942544/5224354917",
-                        "ca-app-pub-3940256099942544/2247696110"));
+                        "ca-app-pub-3940256099942544/2247696110"),
+                "http://192.168.1.142:8080",
+                1);
 
         AdsMediator mediator = AdsMediator.getInstance(this, initializer);
 //        mediator.setAdMethodType(AdMethodType.ADMOB);

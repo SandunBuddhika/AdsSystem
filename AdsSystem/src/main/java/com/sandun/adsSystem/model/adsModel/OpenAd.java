@@ -8,6 +8,7 @@ import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.sandun.adsSystem.dialog.AdDialog;
 import com.sandun.adsSystem.model.AdMethodType;
 import com.sandun.adsSystem.model.AdType;
 import com.sandun.adsSystem.model.AdsMediator;
@@ -25,7 +26,37 @@ public class OpenAd extends AdsCompact {
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        long adSum = pref.getLong("open_sum", 1);
+        int frequency = adsMediator.initializer.getAdFrequency();
         this.errorHandler = errorHandler;
+
+        boolean showPersonal = adsMediator.initializer.isPersonalAdsActive() && frequency > 0 && (adSum % (frequency + 1) == 0);
+        System.out.println("OpenAd: count=" + adSum + " freq=" + frequency + " showPersonal=" + showPersonal);
+
+        pref.edit().putLong("open_sum", adSum + 1).apply();
+
+        if (showPersonal) {
+            adDialog.show(
+                adsMediator.initializer.getBackendUrl(),
+                adsMediator.initializer.getAppId(),
+                "OPEN",
+                handler,
+                loadingDialog,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Personal open ad failed, falling back to AdMob/Meta.");
+                        showNetworkAds(handler);
+                    }
+                }
+            );
+        } else {
+            showNetworkAds(handler);
+        }
+    }
+
+    private void showNetworkAds(AdRequestHandler handler) {
+        loadingDialog.show();
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
         } else {
@@ -62,11 +93,11 @@ public class OpenAd extends AdsCompact {
                     super.onAdImpression();
                 }
             });
-            appOpenAd.show(adsMediator.activity);
+            loadingDialog.dismiss();
+            appOpenAd.show(adsMediator.getActivity());
         } else {
             AppOpenAd.load(
-                    adsMediator.activity, adsMediator.initializer.getGoogleIds().getAppOpenId(), adRequest,
-                    AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
+                    adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getAppOpenId(), adRequest,
                     new AppOpenAd.AppOpenAdLoadCallback() {
                         @Override
                         public void onAdLoaded(AppOpenAd ad) {
@@ -93,11 +124,13 @@ public class OpenAd extends AdsCompact {
                                     super.onAdImpression();
                                 }
                             });
-                            ad.show(adsMediator.activity);
+                            loadingDialog.dismiss();
+                            ad.show(adsMediator.getActivity());
                         }
 
                         @Override
                         public void onAdFailedToLoad(LoadAdError loadAdError) {
+                            loadingDialog.dismiss();
                             System.out.println("Failed to load Open ad");
                             errorHandler.onFailed();
                         }
@@ -144,9 +177,10 @@ public class OpenAd extends AdsCompact {
                         }
                     })
                     .build());
+            loadingDialog.dismiss();
             interstitialAd.show();
         } else {
-            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getInitId());
+            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
             InterstitialAdListener adListener = new InterstitialAdListener() {
                 @Override
                 public void onInterstitialDisplayed(Ad ad) {
@@ -162,12 +196,14 @@ public class OpenAd extends AdsCompact {
                 @Override
                 public void onError(Ad ad, com.facebook.ads.AdError adError) {
                     System.out.println(adError.getErrorMessage());
+                    loadingDialog.dismiss();
                     errorHandler.onFailed();
                 }
 
                 @Override
                 public void onAdLoaded(Ad ad) {
                     System.out.println("onAdLoaded");
+                    loadingDialog.dismiss();
                     mInterstitialAd.show();
                 }
 

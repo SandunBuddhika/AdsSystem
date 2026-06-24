@@ -20,6 +20,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.LoadAdError;
 import com.sandun.adsSystem.R;
+import com.sandun.adsSystem.dialog.PersonalAdView;
 import com.sandun.adsSystem.model.AdMethodType;
 import com.sandun.adsSystem.model.AdType;
 import com.sandun.adsSystem.model.AdsMediator;
@@ -34,20 +35,66 @@ import java.util.Map;
 
 public class NativeAd extends ViewAdsCompact {
     private boolean isMedium;
+    private PersonalAdView personalAdView;
 
     public NativeAd(AdsMediator adsMediator, AdMethodType adMethodType, Map<AdMethodType, Object> preLoadedAds, LinearLayout container, boolean isMedium) {
         super(adsMediator, adMethodType, preLoadedAds, container);
-        this.adType = AdType.NATIVE;
+        this.adType = isMedium ? AdType.NATIVE_MEDIUM : AdType.NATIVE_SMALL;
         this.isMedium = isMedium;
+        this.personalAdView = new PersonalAdView(adsMediator.getActivity());
     }
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        String counterKey = isMedium ? "native_medium_sum" : "native_small_sum";
+        
+        // Migrate legacy "native_sum" to "native_small_sum" for backward compatibility
+        if (!pref.contains("native_small_sum") && pref.contains("native_sum")) {
+            pref.edit().putLong("native_small_sum", pref.getLong("native_sum", 1)).apply();
+        }
+
+        long adSum = pref.getLong(counterKey, 1);
+        int frequency = adsMediator.initializer.getAdFrequency();
         this.errorHandler = errorHandler;
-        if (adMethodType == AdMethodType.ADMOB) {
-            showAdMob(handler);
+
+        boolean showPersonal = adsMediator.initializer.isPersonalAdsActive() && frequency > 0 && (adSum % (frequency + 1) == 0);
+        System.out.println("NativeAd: key=" + counterKey + " count=" + adSum + " freq=" + frequency + " showPersonal=" + showPersonal);
+
+        pref.edit().putLong(counterKey, adSum + 1).apply();
+
+        if (showPersonal) {
+            personalAdView.showNative(
+                container,
+                adsMediator.initializer.getBackendUrl(),
+                adsMediator.initializer.getAppId(),
+                isMedium,
+                handler,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Personal native ad failed, falling back to AdMob/Meta.");
+                        showNetworkAds(handler);
+                    }
+                }
+            );
         } else {
-            showMeta(handler);
+            showNetworkAds(handler);
+        }
+    }
+
+    private void showNetworkAds(AdRequestHandler handler) {
+        if (adMethodType == AdMethodType.ADMOB) {
+            try {
+                showAdMob(handler);
+            } catch (FailedToLoadAdException e) {
+                errorHandler.onFailed();
+            }
+        } else {
+            try {
+                showMeta(handler);
+            } catch (FailedToLoadAdException e) {
+                errorHandler.onFailed();
+            }
         }
     }
 
@@ -58,17 +105,18 @@ public class NativeAd extends ViewAdsCompact {
 
             LinearLayout nativeAdContainer = (LinearLayout) container;
 
-            LinearLayout layout = (LinearLayout) LayoutInflater.from(adsMediator.activity).inflate(isMedium ? R.layout.medium_native_ad_layout : R.layout.small_native_ad_layout, null, false);
+            LinearLayout layout = (LinearLayout) LayoutInflater.from(adsMediator.getActivity()).inflate(isMedium ? R.layout.medium_native_ad_layout : R.layout.small_native_ad_layout, nativeAdContainer, false);
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(layout);
             TemplateView nativeAdView = layout.findViewById(R.id.my_template);
-            AdLoader adLoader = new AdLoader.Builder(adsMediator.activity, adsMediator.initializer.getGoogleIds().getNativeId())
+            AdLoader adLoader = new AdLoader.Builder(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getNativeId())
                     .forNativeAd(nativeAd -> {
                         NativeTemplateStyle styles = new NativeTemplateStyle.Builder().build();
                         nativeAdView.setVisibility(View.VISIBLE);
                         nativeAdView.setStyles(styles);
                         nativeAdView.setNativeAd(nativeAd);
                         viewHandler.viewHandler(nativeAdView);
+                        viewHandler.onSuccess();
                     }).withAdListener(new AdListener() {
                         @Override
                         public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
@@ -87,7 +135,7 @@ public class NativeAd extends ViewAdsCompact {
     public void showMeta(AdRequestHandler handler) throws FailedToLoadAdException {
         try {
             ViewAdRequestHandler viewHandler = (ViewAdRequestHandler) handler;
-            NativeBannerAd nativeAd = new NativeBannerAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getNativeId());
+            NativeBannerAd nativeAd = new NativeBannerAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getNativeId());
             NativeAdListener nativeAdListener = new NativeAdListener() {
                 @Override
                 public void onMediaDownloaded(Ad ad) {
@@ -133,10 +181,10 @@ public class NativeAd extends ViewAdsCompact {
         try {
             nativeBannerAd.unregisterView();
 
-            NativeAdLayout nativeAdLayout = new NativeAdLayout(adsMediator.activity);
+            NativeAdLayout nativeAdLayout = new NativeAdLayout(adsMediator.getActivity());
 
-            LayoutInflater inflater = LayoutInflater.from(adsMediator.activity);
-            LinearLayout adView = (LinearLayout) inflater.inflate(R.layout.banner_native_ad_layout, null, false);
+            LayoutInflater inflater = LayoutInflater.from(adsMediator.getActivity());
+            LinearLayout adView = (LinearLayout) inflater.inflate(R.layout.banner_native_ad_layout, nativeAdLayout, false);
             nativeAdLayout.addView(adView);
 
             handler.viewHandler(nativeAdLayout);
@@ -145,7 +193,7 @@ public class NativeAd extends ViewAdsCompact {
             container.addView(nativeAdLayout);
 
             RelativeLayout adChoicesContainer = adView.findViewById(R.id.ad_choices_container);
-            AdOptionsView adOptionsView = new AdOptionsView(adsMediator.activity, nativeBannerAd, nativeAdLayout);
+            AdOptionsView adOptionsView = new AdOptionsView(adsMediator.getActivity(), nativeBannerAd, nativeAdLayout);
             adChoicesContainer.removeAllViews();
             adChoicesContainer.addView(adOptionsView, 0);
 

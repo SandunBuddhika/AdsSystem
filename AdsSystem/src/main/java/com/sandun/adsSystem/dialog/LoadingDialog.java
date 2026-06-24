@@ -5,8 +5,6 @@ import android.content.Context;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.sandun.adsSystem.R;
-
 public class LoadingDialog {
     private Dialog dialog;
     private Context context;

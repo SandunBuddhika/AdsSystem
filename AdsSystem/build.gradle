@@ -20,6 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
@@ -27,7 +28,6 @@ android {
 }
 
 dependencies {
-
     implementation libs.appcompat
     implementation libs.material
     testImplementation libs.junit
@@ -40,8 +40,9 @@ dependencies {
     implementation("androidx.annotation:annotation:1.0.0")
     implementation("com.facebook.android:audience-network-sdk:6.18.0")
     implementation ("com.airbnb.android:lottie:6.6.2")
-
+    implementation("com.android.volley:volley:1.2.1")
 }
+
 project.afterEvaluate {
     publishing {
         publications {

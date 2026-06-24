@@ -28,7 +28,36 @@ public class RewardAd extends AdsCompact {
 
     @Override
     public void showAds(AdRequestHandler handler, ErrorHandler errorHandler) throws FailedToLoadAdException {
+        long adSum = pref.getLong("reward_sum", 1);
+        int frequency = adsMediator.initializer.getAdFrequency();
         this.errorHandler = errorHandler;
+
+        boolean showPersonal = adsMediator.initializer.isPersonalAdsActive() && frequency > 0 && (adSum % (frequency + 1) == 0);
+        System.out.println("RewardAd: count=" + adSum + " freq=" + frequency + " showPersonal=" + showPersonal);
+
+        pref.edit().putLong("reward_sum", adSum + 1).apply();
+
+        if (showPersonal) {
+            adDialog.show(
+                adsMediator.initializer.getBackendUrl(),
+                adsMediator.initializer.getAppId(),
+                "INIT",
+                handler,
+                loadingDialog,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("Personal reward ad failed, falling back to AdMob/Meta.");
+                        showNetworkAds(handler);
+                    }
+                }
+            );
+        } else {
+            showNetworkAds(handler);
+        }
+    }
+
+    private void showNetworkAds(AdRequestHandler handler) {
         loadingDialog.show();
         if (adMethodType == AdMethodType.ADMOB) {
             showAdMob(handler);
@@ -72,12 +101,12 @@ public class RewardAd extends AdsCompact {
             });
 
             loadingDialog.dismiss();
-            rewardedAd.show(adsMediator.activity, rewardItem -> {
+            rewardedAd.show(adsMediator.getActivity(), rewardItem -> {
                 handler.onSuccess();
                 adsMediator.clearPreLoadedAd(adType);
             });
         } else {
-            RewardedAd.load(adsMediator.activity, adsMediator.initializer.getGoogleIds().getRewardId(),
+            RewardedAd.load(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getRewardId(),
                     adRequest, new RewardedAdLoadCallback() {
                         @Override
                         public void onAdLoaded(@NonNull RewardedAd ad) {
@@ -111,9 +140,9 @@ public class RewardAd extends AdsCompact {
                                 }
                             });
                             loadingDialog.dismiss();
-                            ad.show(adsMediator.activity, rewardItem -> {
+                            ad.show(adsMediator.getActivity(), rewardItem -> {
                                 handler.onSuccess();
-                                adsMediator.clearPreLoadedAd(AdType.INTERSTITIAL);
+                                adsMediator.clearPreLoadedAd(adType);
                             });
                         }
 
@@ -144,7 +173,7 @@ public class RewardAd extends AdsCompact {
                         public void onInterstitialDismissed(Ad ad) {
                             System.out.println("onInterstitialDismissed");
                             handler.onSuccess();
-                            adsMediator.clearPreLoadedAd(AdType.INTERSTITIAL);
+                            adsMediator.clearPreLoadedAd(adType);
                         }
 
                         @Override
@@ -170,7 +199,7 @@ public class RewardAd extends AdsCompact {
             loadingDialog.dismiss();
             interstitialAd.show();
         } else {
-            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.activity, adsMediator.initializer.getFacebookIds().getInitId());
+            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
             InterstitialAdListener adListener = new InterstitialAdListener() {
                 @Override
                 public void onInterstitialDisplayed(Ad ad) {
@@ -181,7 +210,7 @@ public class RewardAd extends AdsCompact {
                 public void onInterstitialDismissed(Ad ad) {
                     System.out.println("onInterstitialDismissed");
                     handler.onSuccess();
-                    adsMediator.clearPreLoadedAd(AdType.INTERSTITIAL);
+                    adsMediator.clearPreLoadedAd(adType);
                 }
 
                 @Override

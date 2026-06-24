@@ -1,5 +1,5 @@
 package com.sandun.adsSystem.model;
 
 public enum AdType {
-    INTERSTITIAL, OPEN, REWARD, BANNER, NATIVE;
+    INTERSTITIAL, OPEN, REWARD, BANNER, NATIVE_SMALL, NATIVE_MEDIUM;
 }

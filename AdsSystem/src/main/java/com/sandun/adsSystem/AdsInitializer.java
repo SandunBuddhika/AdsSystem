@@ -5,6 +5,10 @@ public class AdsInitializer {
     private static AdsInitializer initializer;
     private FacebookIds facebookIds;
     private GoogleIds googleIds;
+    private String backendUrl = "";
+    private int appId = 0;
+    private int adFrequency = 5;
+    private boolean personalAdsActive = true;
 
     private AdsInitializer(FacebookIds facebookIds, GoogleIds googleIds) {
         this.facebookIds = facebookIds;
@@ -208,5 +212,37 @@ public class AdsInitializer {
 
     }
 
+    public static AdsInitializer getInstance(FacebookIds facebookIds, GoogleIds googleIds, String backendUrl, int appId) {
+        if (initializer == null) {
+            initializer = new AdsInitializer(facebookIds, googleIds);
+        }
+        initializer.backendUrl = backendUrl;
+        initializer.appId = appId;
+        return initializer;
+    }
+
+    public String getBackendUrl() {
+        return backendUrl;
+    }
+
+    public int getAppId() {
+        return appId;
+    }
+
+    public int getAdFrequency() {
+        return adFrequency;
+    }
+
+    public void setAdFrequency(int adFrequency) {
+        this.adFrequency = adFrequency;
+    }
+
+    public boolean isPersonalAdsActive() {
+        return personalAdsActive;
+    }
+
+    public void setPersonalAdsActive(boolean personalAdsActive) {
+        this.personalAdsActive = personalAdsActive;
+    }
 }
 
