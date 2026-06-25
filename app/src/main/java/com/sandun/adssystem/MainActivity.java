@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mediator.preLoadAds(AdType.INTERSTITIAL);
         mediator.preLoadAds(AdType.REWARD);
         mediator.preLoadAds(AdType.OPEN);
+        mediator.setAdStatus(AdStatus.HYBRID);
 
         mediator.setLoadingLayoutId(com.sandun.adsSystem.R.layout.dialog_loading_ads_layout);
 
