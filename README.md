@@ -68,7 +68,7 @@ Don't forget to set app ids in the AndroidManifest.xml
 ```java
 //STEP 2: Create AdsMediator
 //This this allow you to load, pre load and manage ads.
-AdsMediator mediator = AdsMediator.getInstance(this, initializer);
+AdsMediator mediator = AdsMediator.getInstance(getApplication(), initializer);
         mediator.setAdMethodType(AdMethodType.ADMOB);
 ```
 

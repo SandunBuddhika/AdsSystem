@@ -1,8 +1,8 @@
 package com.sandun.adsSystem.model;
 
+import android.app.Application;
+import android.app.Activity;
 import android.widget.LinearLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.facebook.ads.AudienceNetworkAds;
 import com.sandun.adsSystem.R;
@@ -21,11 +21,18 @@ import android.content.pm.ApplicationInfo;
 public class AdsMediator {
     private static AdsMediator adsMediator;
     public AdsInitializer initializer;
-    private java.lang.ref.WeakReference<AppCompatActivity> activityRef;
+    private java.lang.ref.WeakReference<Activity> activityRef;
+    private Application application;
 
-    public AppCompatActivity getActivity() {
+    public Activity getActivity() {
         return activityRef != null ? activityRef.get() : null;
     }
+
+    public Context getContext() {
+        Activity act = getActivity();
+        return act != null ? act : application;
+    }
+
     private PreLoader preLoader;
     private AdStatus adStatus = AdStatus.ACTIVE;
     private AdMethodType adMethodType;
@@ -35,26 +42,65 @@ public class AdsMediator {
         preLoader = new PreLoader(this);
     }
 
-    public static AdsMediator getInstance(AppCompatActivity activity, AdsInitializer initializer) {
-        init(activity, initializer);
+    public static AdsMediator getInstance(Application app, AdsInitializer initializer) {
+        init(app, initializer);
         return adsMediator;
     }
 
-    public static AdsMediator getInstance(AppCompatActivity activity) {
-        init(activity, null);
+    public static AdsMediator getInstance(Application app) {
+        init(app, null);
         return adsMediator;
     }
 
-    private static void init(AppCompatActivity activity, AdsInitializer initializer) {
+    private static void init(Application app, AdsInitializer initializer) {
         if (adsMediator == null) {
             adsMediator = new AdsMediator();
-            AudienceNetworkAds.initialize(activity);
+            adsMediator.application = app;
+            AudienceNetworkAds.initialize(app);
+            try {
+                com.google.android.gms.ads.MobileAds.initialize(app, status -> {
+                    System.out.println("Google Mobile Ads SDK initialized.");
+                });
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            app.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+                @Override
+                public void onActivityCreated(Activity activity, android.os.Bundle savedInstanceState) {
+                    adsMediator.activityRef = new java.lang.ref.WeakReference<>(activity);
+                }
+
+                @Override
+                public void onActivityStarted(Activity activity) {
+                    adsMediator.activityRef = new java.lang.ref.WeakReference<>(activity);
+                }
+
+                @Override
+                public void onActivityResumed(Activity activity) {
+                    adsMediator.activityRef = new java.lang.ref.WeakReference<>(activity);
+                }
+
+                @Override
+                public void onActivityPaused(Activity activity) {}
+
+                @Override
+                public void onActivityStopped(Activity activity) {}
+
+                @Override
+                public void onActivitySaveInstanceState(Activity activity, android.os.Bundle outState) {}
+
+                @Override
+                public void onActivityDestroyed(Activity activity) {
+                    if (adsMediator.activityRef != null && adsMediator.activityRef.get() == activity) {
+                        adsMediator.activityRef.clear();
+                    }
+                }
+            });
         }
         if (initializer != null) {
             adsMediator.initializer = initializer;
-            adsMediator.fetchVariablesFromBackend(activity, initializer);
+            adsMediator.fetchVariablesFromBackend(app, initializer);
         }
-        adsMediator.activityRef = new java.lang.ref.WeakReference<>(activity);
     }
 
     private void fetchVariablesFromBackend(android.content.Context context, AdsInitializer initializer) {
@@ -110,6 +156,10 @@ public class AdsMediator {
         return adStatus;
     }
 
+    public PreLoader getPreLoader() {
+        return preLoader;
+    }
+
     public AdStatus resolveEffectiveStatus(Context context) {
         if (adStatus == AdStatus.HYBRID) {
             if (context != null) {
@@ -157,7 +207,7 @@ public class AdsMediator {
     }
 
     public void preLoadAds(AdType adType) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
             switch (adType) {
                 case INTERSTITIAL:
                     preLoader.preLoadInterstitialAds();
@@ -188,7 +238,12 @@ public class AdsMediator {
     }
 
     public void showInterstitialAd(AdRequestHandler handler) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
+            if (getActivity() == null) {
+                System.out.println("Cannot show Interstitial Ad: Active Activity is null");
+                handler.onError();
+                return;
+            }
             InterstitialAd ad = new InterstitialAd(this, adMethodType, preLoader.getInterstitialAd());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -197,7 +252,12 @@ public class AdsMediator {
     }
 
     public void showRewardAd(AdRequestHandler handler) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
+            if (getActivity() == null) {
+                System.out.println("Cannot show Reward Ad: Active Activity is null");
+                handler.onError();
+                return;
+            }
             RewardAd ad = new RewardAd(this, adMethodType, preLoader.getRewardAds());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -206,7 +266,12 @@ public class AdsMediator {
     }
 
     public void showOpenAd(AdRequestHandler handler) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
+            if (getActivity() == null) {
+                System.out.println("Cannot show Open Ad: Active Activity is null");
+                handler.onError();
+                return;
+            }
             OpenAd ad = new OpenAd(this, adMethodType, preLoader.getOpenAds());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -219,7 +284,12 @@ public class AdsMediator {
     }
 
     public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container, boolean isMedium) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
+            if (getActivity() == null) {
+                System.out.println("Cannot show Native Ad: Active Activity is null");
+                handler.onError();
+                return;
+            }
             NativeAd ad = new NativeAd(this, adMethodType, preLoader.getOpenAds(), container, isMedium);
             new ErrorHandler(ad, handler, this);
         } else {
@@ -228,7 +298,12 @@ public class AdsMediator {
     }
 
     public void showBannerAd(ViewAdRequestHandler handler, LinearLayout container) {
-        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
+        if (resolveEffectiveStatus(getContext()) != AdStatus.DISABLE) {
+            if (getActivity() == null) {
+                System.out.println("Cannot show Banner Ad: Active Activity is null");
+                handler.onError();
+                return;
+            }
             BannerAd ad = new BannerAd(this, adMethodType, preLoader.getOpenAds(), container);
             new ErrorHandler(ad, handler, this);
         } else {

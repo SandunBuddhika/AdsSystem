@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 "http://192.168.1.142:8080",
                 1);
 
-        AdsMediator mediator = AdsMediator.getInstance(this, initializer);
+        AdsMediator mediator = AdsMediator.getInstance(getApplication(), initializer);
 //        mediator.setAdMethodType(AdMethodType.ADMOB);
         mediator.preLoadAds(AdType.INTERSTITIAL);
         mediator.preLoadAds(AdType.REWARD);

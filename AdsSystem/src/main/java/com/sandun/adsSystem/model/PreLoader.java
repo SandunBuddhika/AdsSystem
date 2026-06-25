@@ -21,6 +21,7 @@ public class PreLoader {
     private final Map<AdMethodType, Object> interstitialAds;
     private final Map<AdMethodType, Object> rewardAds;
     private final Map<AdMethodType, Object> openAds;
+    private long appOpenAdLoadTime = 0;
     public PreLoader(AdsMediator adsMediator) {
         this.adsMediator = adsMediator;
         adRequest = new AdRequest.Builder().build();
@@ -29,7 +30,7 @@ public class PreLoader {
         openAds = new HashMap<>();
     }
     public void preLoadInterstitialAds() {
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getContext(), adsMediator.getEffectiveFacebookIds(adsMediator.getContext()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -66,7 +67,7 @@ public class PreLoader {
                         .build()
         );
 
-        com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getInitId(), adRequest,
+        com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getContext(), adsMediator.getEffectiveGoogleIds(adsMediator.getContext()).getInitId(), adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
@@ -94,7 +95,7 @@ public class PreLoader {
     }
 
     public void preLoadRewardAds() {
-        RewardedAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getRewardId(),
+        RewardedAd.load(adsMediator.getContext(), adsMediator.getEffectiveGoogleIds(adsMediator.getContext()).getRewardId(),
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
@@ -110,7 +111,7 @@ public class PreLoader {
                 });
 
 
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getContext(), adsMediator.getEffectiveFacebookIds(adsMediator.getContext()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -162,11 +163,12 @@ public class PreLoader {
 
     public void preOpenAds() {
         AppOpenAd.load(
-                adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getAppOpenId(), adRequest,
+                adsMediator.getContext(), adsMediator.getEffectiveGoogleIds(adsMediator.getContext()).getAppOpenId(), adRequest,
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     @Override
                     public void onAdLoaded(AppOpenAd ad) {
                         System.out.println("App Open Ad Pre loaded");
+                        appOpenAdLoadTime = new java.util.Date().getTime();
                         openAds.put(AdMethodType.ADMOB, ad);
                     }
 
@@ -177,7 +179,7 @@ public class PreLoader {
                 });
 
 
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getContext(), adsMediator.getEffectiveFacebookIds(adsMediator.getContext()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -222,8 +224,19 @@ public class PreLoader {
     public void clearOpenAds() {
         try {
             openAds.clear();
+            appOpenAdLoadTime = 0;
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isAppOpenAdAvailable() {
+        Object ad = openAds.get(AdMethodType.ADMOB);
+        if (!(ad instanceof AppOpenAd)) {
+            return false;
+        }
+        long numMilliSecondsPerHour = 3600000;
+        long dateDifference = new java.util.Date().getTime() - appOpenAdLoadTime;
+        return (dateDifference < (numMilliSecondsPerHour * 4));
     }
 }
