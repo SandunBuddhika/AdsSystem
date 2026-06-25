@@ -106,7 +106,7 @@ public class RewardAd extends AdsCompact {
                 adsMediator.clearPreLoadedAd(adType);
             });
         } else {
-            RewardedAd.load(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getRewardId(),
+            RewardedAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getRewardId(),
                     adRequest, new RewardedAdLoadCallback() {
                         @Override
                         public void onAdLoaded(@NonNull RewardedAd ad) {
@@ -199,7 +199,7 @@ public class RewardAd extends AdsCompact {
             loadingDialog.dismiss();
             interstitialAd.show();
         } else {
-            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
             InterstitialAdListener adListener = new InterstitialAdListener() {
                 @Override
                 public void onInterstitialDisplayed(Ad ad) {

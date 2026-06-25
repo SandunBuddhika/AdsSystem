@@ -14,6 +14,9 @@ import com.sandun.adsSystem.model.adsModel.NativeAd;
 import com.sandun.adsSystem.model.adsModel.OpenAd;
 import com.sandun.adsSystem.model.adsModel.RewardAd;
 import com.sandun.adsSystem.model.handler.ViewAdRequestHandler;
+import com.sandun.adsSystem.model.enums.AdStatus;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 
 public class AdsMediator {
     private static AdsMediator adsMediator;
@@ -24,7 +27,7 @@ public class AdsMediator {
         return activityRef != null ? activityRef.get() : null;
     }
     private PreLoader preLoader;
-    private boolean isIgnoreAds;
+    private AdStatus adStatus = AdStatus.ACTIVE;
     private AdMethodType adMethodType;
     private int loadingLayoutId = R.layout.dialog_loading_ads_layout;
 
@@ -61,7 +64,7 @@ public class AdsMediator {
 
         String url = initializer.getBackendUrl() + "/api/initialize/" + initializer.getAppId();
         com.android.volley.RequestQueue queue = VolleySingleton.getInstance(context).getRequestQueue();
-        
+
         com.android.volley.toolbox.JsonObjectRequest request = new com.android.volley.toolbox.JsonObjectRequest(
             com.android.volley.Request.Method.GET,
             url,
@@ -99,8 +102,42 @@ public class AdsMediator {
     }
 
 
-    public void setIgnoreAds(boolean ignoreAds) {
-        isIgnoreAds = ignoreAds;
+    public void setAdStatus(AdStatus adStatus) {
+        this.adStatus = adStatus;
+    }
+
+    public AdStatus getAdStatus() {
+        return adStatus;
+    }
+
+    public AdStatus resolveEffectiveStatus(Context context) {
+        if (adStatus == AdStatus.HYBRID) {
+            if (context != null) {
+                boolean isDebug = (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+                return isDebug ? AdStatus.TESTING : AdStatus.ACTIVE;
+            }
+            return AdStatus.ACTIVE;
+        }
+        return adStatus;
+    }
+
+    public AdsInitializer.GoogleIds getEffectiveGoogleIds(Context context) {
+        AdStatus effective = resolveEffectiveStatus(context);
+        if (effective == AdStatus.TESTING) {
+            return AdsInitializer.getTestGoogleIds();
+        }
+        return initializer != null ? initializer.getGoogleIds() : null;
+    }
+
+    public AdsInitializer.FacebookIds getEffectiveFacebookIds(Context context) {
+        AdStatus effectiveStatus = resolveEffectiveStatus(context);
+        try {
+            boolean isTest = (effectiveStatus == AdStatus.TESTING);
+            com.facebook.ads.AdSettings.setTestMode(isTest);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return initializer != null ? initializer.getFacebookIds() : null;
     }
 
     public void setAdMethodType(AdMethodType adMethodType) {
@@ -120,7 +157,7 @@ public class AdsMediator {
     }
 
     public void preLoadAds(AdType adType) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             switch (adType) {
                 case INTERSTITIAL:
                     preLoader.preLoadInterstitialAds();
@@ -151,7 +188,7 @@ public class AdsMediator {
     }
 
     public void showInterstitialAd(AdRequestHandler handler) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             InterstitialAd ad = new InterstitialAd(this, adMethodType, preLoader.getInterstitialAd());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -160,7 +197,7 @@ public class AdsMediator {
     }
 
     public void showRewardAd(AdRequestHandler handler) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             RewardAd ad = new RewardAd(this, adMethodType, preLoader.getRewardAds());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -169,7 +206,7 @@ public class AdsMediator {
     }
 
     public void showOpenAd(AdRequestHandler handler) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             OpenAd ad = new OpenAd(this, adMethodType, preLoader.getOpenAds());
             new ErrorHandler(ad, handler, this);
         } else {
@@ -182,7 +219,7 @@ public class AdsMediator {
     }
 
     public void showNativeAd(ViewAdRequestHandler handler, LinearLayout container, boolean isMedium) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             NativeAd ad = new NativeAd(this, adMethodType, preLoader.getOpenAds(), container, isMedium);
             new ErrorHandler(ad, handler, this);
         } else {
@@ -191,7 +228,7 @@ public class AdsMediator {
     }
 
     public void showBannerAd(ViewAdRequestHandler handler, LinearLayout container) {
-        if (!isIgnoreAds) {
+        if (resolveEffectiveStatus(getActivity()) != AdStatus.DISABLE) {
             BannerAd ad = new BannerAd(this, adMethodType, preLoader.getOpenAds(), container);
             new ErrorHandler(ad, handler, this);
         } else {

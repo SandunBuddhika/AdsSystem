@@ -15,6 +15,7 @@ import com.sandun.adsSystem.model.AdType;
 import com.sandun.adsSystem.model.AdsMediator;
 import com.sandun.adsSystem.model.handler.AdRequestHandler;
 import com.sandun.adsSystem.model.handler.ViewAdRequestHandler;
+import com.sandun.adsSystem.model.enums.AdStatus;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         AdsInitializer initializer = AdsInitializer.getInstance(
-                new AdsInitializer.FacebookIds("123", "123", "123", "123"),
-                new AdsInitializer.GoogleIds("ca-app-pub-3940256099942544~3347511713",
+                null
+                ,new AdsInitializer.GoogleIds("ca-app-pub-3940256099942544~3347511713",
                         "ca-app-pub-3940256099942544/1033173712",
                         "ca-app-pub-3940256099942544/9214589741",
                         "ca-app-pub-3940256099942544/9257395921",
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         mediator.setLoadingLayoutId(com.sandun.adsSystem.R.layout.dialog_loading_ads_layout);
 
-//        mediator.setIgnoreAds(true);
+//        mediator.setAdStatus(AdStatus.HYBRID);
         findViewById(R.id.interstitial_ad_btn).setOnClickListener(v -> {
             mediator.showInterstitialAd(new AdRequestHandler() {
                 @Override

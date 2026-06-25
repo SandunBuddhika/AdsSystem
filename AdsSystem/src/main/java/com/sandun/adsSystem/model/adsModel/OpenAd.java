@@ -97,7 +97,7 @@ public class OpenAd extends AdsCompact {
             appOpenAd.show(adsMediator.getActivity());
         } else {
             AppOpenAd.load(
-                    adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getAppOpenId(), adRequest,
+                    adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getAppOpenId(), adRequest,
                     new AppOpenAd.AppOpenAdLoadCallback() {
                         @Override
                         public void onAdLoaded(AppOpenAd ad) {
@@ -180,7 +180,7 @@ public class OpenAd extends AdsCompact {
             loadingDialog.dismiss();
             interstitialAd.show();
         } else {
-            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
             InterstitialAdListener adListener = new InterstitialAdListener() {
                 @Override
                 public void onInterstitialDisplayed(Ad ad) {

@@ -91,7 +91,7 @@ public class InterstitialAd extends AdsCompact {
             loadingDialog.dismiss();
             interstitialAd.show(adsMediator.getActivity());
         } else {
-            com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getInitId(), adRequest,
+            com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getInitId(), adRequest,
                     new InterstitialAdLoadCallback() {
                         @Override
                         public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
@@ -165,7 +165,7 @@ public class InterstitialAd extends AdsCompact {
             loadingDialog.dismiss();
             interstitialAd.show();
         } else {
-            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+            com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
             InterstitialAdListener adListener = new InterstitialAdListener() {
                 @Override
                 public void onInterstitialDisplayed(Ad ad) {

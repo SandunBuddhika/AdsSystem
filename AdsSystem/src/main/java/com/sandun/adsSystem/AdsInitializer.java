@@ -11,17 +11,17 @@ public class AdsInitializer {
     private boolean personalAdsActive = true;
 
     private AdsInitializer(FacebookIds facebookIds, GoogleIds googleIds) {
-        this.facebookIds = facebookIds;
+        this.facebookIds = facebookIds == null ? new AdsInitializer.FacebookIds("123", "123", "123", "123") : facebookIds;
         this.googleIds = googleIds;
         checkNull();
     }
 
     public void checkNull() {
         if (this.googleIds == null) {
-            this.googleIds =new GoogleIds();
+            this.googleIds = new GoogleIds();
         }
         if (this.facebookIds == null) {
-            this.facebookIds =new FacebookIds();
+            this.facebookIds = new FacebookIds();
         }
     }
 
@@ -46,6 +46,17 @@ public class AdsInitializer {
 
     public GoogleIds getGoogleIds() {
         return googleIds;
+    }
+
+    public static GoogleIds getTestGoogleIds() {
+        return new GoogleIds(
+            "ca-app-pub-3940256099942544~3347511713",
+            "ca-app-pub-3940256099942544/1033173712",
+            "ca-app-pub-3940256099942544/6300978111",
+            "ca-app-pub-3940256099942544/9257395921",
+            "ca-app-pub-3940256099942544/5224354917",
+            "ca-app-pub-3940256099942544/2247696110"
+        );
     }
 
     public void setGoogleIds(GoogleIds googleIds) {

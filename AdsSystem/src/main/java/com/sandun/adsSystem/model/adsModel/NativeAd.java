@@ -109,7 +109,7 @@ public class NativeAd extends ViewAdsCompact {
             nativeAdContainer.removeAllViews();
             nativeAdContainer.addView(layout);
             TemplateView nativeAdView = layout.findViewById(R.id.my_template);
-            AdLoader adLoader = new AdLoader.Builder(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getNativeId())
+            AdLoader adLoader = new AdLoader.Builder(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getNativeId())
                     .forNativeAd(nativeAd -> {
                         NativeTemplateStyle styles = new NativeTemplateStyle.Builder().build();
                         nativeAdView.setVisibility(View.VISIBLE);
@@ -135,7 +135,7 @@ public class NativeAd extends ViewAdsCompact {
     public void showMeta(AdRequestHandler handler) throws FailedToLoadAdException {
         try {
             ViewAdRequestHandler viewHandler = (ViewAdRequestHandler) handler;
-            NativeBannerAd nativeAd = new NativeBannerAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getNativeId());
+            NativeBannerAd nativeAd = new NativeBannerAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getNativeId());
             NativeAdListener nativeAdListener = new NativeAdListener() {
                 @Override
                 public void onMediaDownloaded(Ad ad) {

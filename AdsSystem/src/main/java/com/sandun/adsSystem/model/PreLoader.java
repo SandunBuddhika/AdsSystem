@@ -29,7 +29,7 @@ public class PreLoader {
         openAds = new HashMap<>();
     }
     public void preLoadInterstitialAds() {
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -66,7 +66,7 @@ public class PreLoader {
                         .build()
         );
 
-        com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getInitId(), adRequest,
+        com.google.android.gms.ads.interstitial.InterstitialAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getInitId(), adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull com.google.android.gms.ads.interstitial.InterstitialAd interstitialAd) {
@@ -94,7 +94,7 @@ public class PreLoader {
     }
 
     public void preLoadRewardAds() {
-        RewardedAd.load(adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getRewardId(),
+        RewardedAd.load(adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getRewardId(),
                 adRequest, new RewardedAdLoadCallback() {
                     @Override
                     public void onAdLoaded(@NonNull RewardedAd ad) {
@@ -110,7 +110,7 @@ public class PreLoader {
                 });
 
 
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {
@@ -162,7 +162,7 @@ public class PreLoader {
 
     public void preOpenAds() {
         AppOpenAd.load(
-                adsMediator.getActivity(), adsMediator.initializer.getGoogleIds().getAppOpenId(), adRequest,
+                adsMediator.getActivity(), adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getAppOpenId(), adRequest,
                 new AppOpenAd.AppOpenAdLoadCallback() {
                     @Override
                     public void onAdLoaded(AppOpenAd ad) {
@@ -177,7 +177,7 @@ public class PreLoader {
                 });
 
 
-        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getInitId());
+        com.facebook.ads.InterstitialAd mInterstitialAd = new com.facebook.ads.InterstitialAd(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getInitId());
         InterstitialAdListener adListener = new InterstitialAdListener() {
             @Override
             public void onInterstitialDisplayed(Ad ad) {

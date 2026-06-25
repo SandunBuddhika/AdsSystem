@@ -94,7 +94,7 @@ public class BannerAd extends ViewAdsCompact {
             });
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             adView.setLayoutParams(layoutParams);
-            adView.setAdUnitId(adsMediator.initializer.getGoogleIds().getBannerId());
+            adView.setAdUnitId(adsMediator.getEffectiveGoogleIds(adsMediator.getActivity()).getBannerId());
             adView.setAdSize(AdSize.BANNER);
             container.removeAllViews();
             container.addView(adView);
@@ -107,7 +107,7 @@ public class BannerAd extends ViewAdsCompact {
     @Override
     public void showMeta(AdRequestHandler handler) throws FailedToLoadAdException {
         try {
-            com.facebook.ads.AdView bannerAdView = new com.facebook.ads.AdView(adsMediator.getActivity(), adsMediator.initializer.getFacebookIds().getBannerId(), com.facebook.ads.AdSize.BANNER_HEIGHT_50);
+            com.facebook.ads.AdView bannerAdView = new com.facebook.ads.AdView(adsMediator.getActivity(), adsMediator.getEffectiveFacebookIds(adsMediator.getActivity()).getBannerId(), com.facebook.ads.AdSize.BANNER_HEIGHT_50);
             container.removeAllViews();
             container.addView(bannerAdView);
             bannerAdView.loadAd(bannerAdView.buildLoadAdConfig().withAdListener(new com.facebook.ads.AdListener() {
