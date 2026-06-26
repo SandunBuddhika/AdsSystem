@@ -47,8 +47,7 @@ public class AdsMediator {
         return adsMediator;
     }
 
-    public static AdsMediator getInstance(Application app) {
-        init(app, null);
+    public static AdsMediator getInstance() {
         return adsMediator;
     }
 
